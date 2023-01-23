@@ -18,6 +18,32 @@ export const getPlaylists = async (req:Request, res:Response): Promise<void> => 
         console.log(error);       
     }
 };
+export const postPlaylist = async(req:Request,res:Response):Promise<void>=>{
+    try{
+        const data = req.body;
+
+        const playlist = await prisma.playlist.create({
+            include:{
+                songs:true
+            },
+            data:{
+                name:data.name,
+                author:data.author,
+            }
+        })
+        res.status(201).json({
+            ok:true,
+            result:playlist,
+        });
+    }
+    catch(error){
+        res.status(500).json({
+            ok:false,
+            message:error,
+        });
+        console.log(error); 
+    }
+};
 
 
 //aqui van los ocntroladores

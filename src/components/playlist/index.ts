@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getPlaylists } from "./controller";
+import { getPlaylists, postPlaylist } from "./controller";
 
 const rutaPlaylists: Router = Router();
 
 rutaPlaylists.get("/", getPlaylists);
-
+rutaPlaylists.post("/", postPlaylist);
 export default rutaPlaylists;
