@@ -8,6 +8,6 @@ npm install
 Create .env 
 ```
 DATABASE_URL="file:./dev.db"
-PORT=3000
+PORT=8000
 ```
 
