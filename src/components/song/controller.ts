@@ -3,10 +3,7 @@ import { PrismaClient } from "@prisma/client";
 // song
 const prisma = new PrismaClient();
 
-export const getCanciones = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getCanciones = async (req: Request,res: Response): Promise<void> => {
   try {
     const element = await prisma.song.findMany();
     res.status(200).json({
