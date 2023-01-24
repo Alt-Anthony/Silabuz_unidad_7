@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 dotenv.config();
 
-export const postUser =async (req:Request, res:Response):Promise<void> => {
+export const postUsuario =async (req:Request, res:Response):Promise<void> => {
   try {
     const data = req.body
     const element = await prisma.user.create({

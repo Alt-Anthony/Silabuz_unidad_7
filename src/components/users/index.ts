@@ -1,9 +1,14 @@
 import { Router } from "express";
-import { postUser, postToken } from "./controller";
+// funciones
+import { postUsuario,postToken } from "./controller";
 
-const userRouter: Router = Router()
+const rutaUsuario: Router = Router()
 
-userRouter.post("/", postUser)
-userRouter.post("/token", postToken)
 
-export default userRouter
+rutaUsuario.post("/", postUsuario)
+rutaUsuario.post("/token", postToken)
+
+
+export default rutaUsuario
+
+
