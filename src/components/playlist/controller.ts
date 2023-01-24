@@ -5,7 +5,9 @@ const prisma = new PrismaClient();
 
 export const getPlaylists = async (req:Request, res:Response): Promise<void> => {
     try{
-        const playlist = await prisma.playlist.findMany();
+        const playlist = await prisma.playlist.findMany({
+            include:{songs:true},
+        });
         res.status(200).json({
             ok:true,
             results: playlist,
@@ -23,17 +25,15 @@ export const postPlaylist = async(req:Request,res:Response):Promise<void>=>{
         const data = req.body;
 
         const playlist = await prisma.playlist.create({
-            include:{
-                songs:true
-            },
             data:{
                 name:data.name,
-                author:data.author,
-            }
-        })
+                author:{connect: {id: data.author}},
+                songs:{connect: data.songs.map((song:any)=>({id:song.id})),},
+            },
+        });
         res.status(201).json({
             ok:true,
-            result:playlist,
+            element:playlist,
         });
     }
     catch(error){
@@ -51,7 +51,7 @@ export const addSong =async (req:Request,res:Response):Promise<void> => {
  
      const playlist = await prisma.playlist.update({
          where: {
-             id: data.id.playlist,
+             id: data.id_playlist,
          },
          include:{
              songs: true,
