@@ -1,15 +1,31 @@
 import type { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-// song
+import { validarToken } from "./middleware";
+
 const prisma = new PrismaClient();
 
-export const getCanciones = async (req: Request,res: Response): Promise<void> => {
+export const getCanciones = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const element = await prisma.song.findMany();
-    res.status(200).json({
-      ok: true,
-      results: element,
-    });
+    const valorToken = validarToken(req, res);
+
+    if (valorToken) {
+      const element = await prisma.song.findMany();
+      res.status(200).json({
+        ok: true,
+        message:"todas las canciones",
+        results: element,
+      });
+    } else {
+      const element = await prisma.song.findMany({ where: { public: true } });
+      res.status(200).json({
+        ok: true,
+        message:"canciones publicas",
+        results: element,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       ok: false,
@@ -26,10 +42,6 @@ export const postCanciones = async (
   try {
     const data = req.body;
 
-    if (data.year <= 0) {
-      throw new Error("Use correct dates");
-    }
-
     const element = await prisma.song.create({
       data: {
         name: data.name,
@@ -45,30 +57,6 @@ export const postCanciones = async (
     res.status(201).json({
       ok: true,
       result: element,
-    });
-  } catch (error) {
-    res.status(500).json({
-      ok: false,
-      message: error,
-    });
-    console.log(error);
-  }
-};
-
-export const getIDCancion = async (req: Request, res: Response) => {
-  try {
-    const urlID = req.params.id;
-
-    // Prisma CLI => CRUD => GET, POST; DELETe
-    const element = await prisma.song.findUnique({
-      where: {
-        id: Number(urlID),
-      },
-    });
-
-    res.status(200).json({
-      ok: true,
-      results: element,
     });
   } catch (error) {
     res.status(500).json({
