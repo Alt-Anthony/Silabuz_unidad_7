@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { validateToken } from "./middleware";
 
 const prisma = new PrismaClient();
 
@@ -7,12 +8,28 @@ export const getCanciones = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+
   try {
-    const element = await prisma.song.findMany();
-    res.status(200).json({
-      ok: true,
-      results: element,
-    });
+    const token = validateToken(req, res);
+
+    if (token) {
+      const element = await prisma.song.findMany();
+
+      res.status(200).json({
+        ok: true,
+        results: element,
+      });
+
+    }
+    else {
+      const element = await prisma.song.findMany({ where: { public: true } });
+      res.status(200).json({
+        ok: true,
+        message:"canciones publicas",
+        results: element,
+      });
+    }
+
   } catch (error) {
     res.status(500).json({
       ok: false,
