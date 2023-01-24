@@ -6,7 +6,7 @@ const rutaUsuario: Router = Router()
 
 
 rutaUsuario.post("/", postUsuario)
-rutaUsuario.post("/token", postToken)
+rutaUsuario.post("/login", postToken)
 
 
 export default rutaUsuario
